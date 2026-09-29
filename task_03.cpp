@@ -1,41 +1,91 @@
 #include <iostream>
+#include <string>
 using namespace std;
 
 class Node {
 public:
-    int data;
+    string productID;
     Node* next;
 };
 
-int main() {
-    // Create initial nodes: 10 -> 20 -> 30 -> NULL
-    Node* head = new Node();
-    Node* second = new Node();
-    Node* third = new Node();
-    
-    head->data = 10;
-    head->next = second;
-    
-    second->data = 20;
-    second->next = third;
-    
-    third->data = 30;
-    third->next = NULL;
-    
-    // Delete the first node
-    if (head != NULL) {
-        Node* temp = head;     // Temporarily store current head
-        head = head->next;     // Move head to the next node
-        delete temp;           // Free memory of old head
+// Function to add a product at the end of the cart
+void addProduct(Node*& head, string id) {
+    Node* newNode = new Node();
+    newNode->productID = id;
+    newNode->next = NULL;
+
+    if (head == NULL) {
+        head = newNode;
+        return;
     }
-    
-    // Display the Linked List
-    cout << "Linked List after deleting the first node: ";
+
     Node* current = head;
-    while (current != NULL) {
-        cout << current->data << " ";
+    while (current->next != NULL) {
         current = current->next;
     }
-    
+    current->next = newNode;
+}
+
+// Function to display products in the cart
+void displayCart(Node* head) {
+    Node* current = head;
+    while (current != NULL) {
+        cout << current->productID;
+        if (current->next != NULL) cout << " -> ";
+        current = current->next;
+    }
+    cout << endl;
+}
+
+// Function to remove a product by its Product ID
+void removeProduct(Node*& head, string id) {
+    if (head == NULL) return;
+
+    // If the node to be deleted is the head
+    if (head->productID == id) {
+        Node* temp = head;
+        head = head->next;
+        delete temp;
+        return;
+    }
+
+    Node* current = head;
+    while (current->next != NULL && current->next->productID != id) {
+        current = current->next;
+    }
+
+    if (current->next != NULL) {
+        Node* temp = current->next;
+        current->next = current->next->next;
+        delete temp;
+    }
+}
+
+int main() {
+    Node* head = NULL;
+
+    // Adding products to the cart
+    addProduct(head, "P101");
+    addProduct(head, "P205");
+    addProduct(head, "P310");
+    addProduct(head, "P415");
+
+    cout << "Shopping Cart:\n";
+    displayCart(head);
+
+    // Remove product P310
+    string removeID = "P310";
+    cout << "Remove Product: " << removeID << endl;
+    removeProduct(head, removeID);
+
+    // Display updated cart
+    cout << "Updated Cart:\n";
+    Node* current = head;
+    while (current != NULL) {
+        cout << current->productID << " ";
+        current = current->next;
+    }
+    cout << endl;
+
     return 0;
 }

@@ -3,34 +3,74 @@ using namespace std;
 
 class Node {
 public:
-    int data;
+    int rollNumber;
     Node* next;
 };
 
-int main() {
-    // Create initial nodes: 20 -> 30 -> NULL
-    Node* head = new Node();
-    Node* second = new Node();
-    
-    head->data = 20;
-    head->next = second;
-    
-    second->data = 30;
-    second->next = NULL;
-    
-    // Create a new node to insert at the beginning
+// Function to add a student at the end
+void appendStudent(Node*& head, int roll) {
     Node* newNode = new Node();
-    newNode->data = 10;
-    newNode->next = head; // Point new node to the old head
-    head = newNode;       // Update head to point to the new node
-    
-    // Display the Linked List
-    cout << "Linked List after inserting at the beginning: ";
+    newNode->rollNumber = roll;
+    newNode->next = NULL;
+
+    if (head == NULL) {
+        head = newNode;
+        return;
+    }
+
     Node* current = head;
-    while (current != NULL) {
-        cout << current->data << " ";
+    while (current->next != NULL) {
         current = current->next;
     }
-    
+    current->next = newNode;
+}
+
+// Function to display all registered students
+void displayStudents(Node* head) {
+    Node* current = head;
+    cout << "Registered Students:\n";
+    while (current != NULL) {
+        cout << current->rollNumber;
+        if (current->next != NULL) cout << " -> ";
+        current = current->next;
+    }
+    cout << endl;
+}
+
+// Function to search for a student using Roll Number
+void searchStudent(Node* head, int roll) {
+    Node* current = head;
+    bool found = false;
+    while (current != NULL) {
+        if (current->rollNumber == roll) {
+            found = true;
+            break;
+        }
+        current = current->next;
+    }
+
+    cout << "Enter Roll Number to Search: " << roll << endl;
+    if (found) {
+        cout << "Student Found\n";
+    } else {
+        cout << "Student Not Found\n";
+    }
+}
+
+int main() {
+    Node* head = NULL;
+
+    // Adding students as per example
+    appendStudent(head, 101);
+    appendStudent(head, 105);
+    appendStudent(head, 108);
+    appendStudent(head, 112);
+
+    // Display registered students
+    displayStudents(head);
+
+    // Search for a student
+    searchStudent(head, 108);
+
     return 0;
 }
